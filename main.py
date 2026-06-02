@@ -130,3 +130,23 @@ class LoginWindow:
             win.destroy()
 
         ttk.Button(win, text="Simpan", command=simpan).pack(pady=10)
+
+class Dashboard:
+    def __init__(self, username):
+        self.username = username
+        self.root = tk.Tk()
+        self.root.title("Sistem Manajemen Gudang & Pesanan")
+        self.root.geometry("1300x750")
+        self.root.configure(bg="#f4f6f9")
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+
+        self.build_header()
+        self.build_statistik()
+        self.build_form_barang()
+        self.build_table()
+        self.build_pesanan()
+        self.build_riwayat()
+        self.refresh()
+        self.root.mainloop()
+
