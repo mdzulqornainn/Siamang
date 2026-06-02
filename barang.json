@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "nama": "Buku",
+        "stok": 79,
+        "harga": 5000
+    },
+    {
+        "id": 2,
+        "nama": "Pensil 2B",
+        "stok": 150,
+        "harga": 3000
+    },
+    {
+        "id": 3,
+        "nama": "Pulpen Hitam",
+        "stok": 85,
+        "harga": 4000
+    },
+    {
+        "id": 4,
+        "nama": "Penghapus",
+        "stok": 200,
+        "harga": 1500
+    },
+    {
+        "id": 5,
+        "nama": "Penggaris 30cm",
+        "stok": 50,
+        "harga": 6000
+    },
+    {
+        "id": 6,
+        "nama": "Tipe-X Cair",
+        "stok": 45,
+        "harga": 8500
+    },
+    {
+        "id": 7,
+        "nama": "Buku Gambar A4",
+        "stok": 30,
+        "harga": 12000
+    },
+    {
+        "id": 8,
+        "nama": "Rautan Pensil",
+        "stok": 120,
+        "harga": 2500
+    },
+    {
+        "id": 9,
+        "nama": "Spidol Papan Tulis",
+        "stok": 65,
+        "harga": 9000
+    },
+    {
+        "id": 10,
+        "nama": "Kertas Origami",
+        "stok": 40,
+        "harga": 7500
+    }
+]

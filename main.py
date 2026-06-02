@@ -150,3 +150,80 @@ class Dashboard:
         self.refresh()
         self.root.mainloop()
 
+        def build_header(self):
+        frame = tk.Frame(self.root, bg="#1f4e79", height=80)
+        frame.pack(fill="x")
+        tk.Label(frame, text="SISTEM MANAJEMEN GUDANG & PESANAN", bg="#1f4e79", fg="white", font=("Segoe UI", 16, "bold")).pack(side="left", padx=20)
+        tk.Label(frame, text=f"User: {self.username}", bg="#1f4e79", fg="white").pack(side="right", padx=20)
+
+    def build_statistik(self):
+        frame = tk.Frame(self.root, bg="#f4f6f9")
+        frame.pack(fill="x", padx=10, pady=10)
+        self.card_barang = tk.Label(frame, text="Barang: 0", bg="#ffffff", width=20)
+        self.card_barang.pack(side="left", padx=10)
+        self.card_stok = tk.Label(frame, text="Stok: 0", bg="#ffffff", width=20)
+        self.card_stok.pack(side="left", padx=10)
+        self.card_nilai = tk.Label(frame, text="Nilai: 0", bg="#ffffff", width=20)
+        self.card_nilai.pack(side="left", padx=10)
+        ttk.Button(frame, text="Logout", command=self.logout).pack(side="right")
+
+    def build_form_barang(self):
+        frame = tk.LabelFrame(self.root, text="Manajemen Barang")
+        frame.pack(fill="x", padx=10, pady=5)
+        tk.Label(frame, text="Nama Barang").grid(row=0, column=0)
+        self.nama = ttk.Entry(frame, width=25)
+        self.nama.grid(row=0, column=1, padx=5)
+        tk.Label(frame, text="Stok").grid(row=0, column=2)
+        self.stok = ttk.Entry(frame, width=25)
+        self.stok.grid(row=0, column=3, padx=5)
+        tk.Label(frame, text="Harga").grid(row=1, column=2)
+        self.harga = ttk.Entry(frame, width=25)
+        self.harga.grid(row=1, column=3, padx=5)
+        ttk.Button(frame, text="Tambah", command=self.tambah_barang).grid(row=0, column=6, padx=5, pady=5)
+        ttk.Button(frame, text="Update", command=self.update_barang).grid(row=0, column=7, padx=5, pady=5)
+        ttk.Button(frame, text="Hapus", command=self.hapus_barang).grid(row=0, column=8, padx=5, pady=5)
+        tk.Label(frame, text="Cari").grid(row=1, column=0)
+        self.cari = ttk.Entry(frame, width=25)
+        self.cari.grid(row=1, column=1)
+        ttk.Button(frame, text="Cari Nama", command=self.cari_barang).grid(row=1, column=6, padx=5, pady=5)
+        ttk.Button(frame, text="Cari ID", command=self.binary_search).grid(row=1, column=7, padx=5, pady=5)
+        ttk.Button(frame, text="Urut Nama", command=self.sort_nama).grid(row=1, column=8, padx=5, pady=5)
+        ttk.Button(frame, text="Urut Stok", command=self.sort_stok).grid(row=1, column=9, padx=5, pady=5)
+        ttk.Button(frame, text="Urut Harga", command=self.sort_harga).grid(row=1, column=10, padx=5, pady=5)
+        ttk.Button(frame, text="Export CSV", command=self.export_csv).grid(row=1, column=11, padx=5, pady=5)
+
+    def build_table(self):
+        frame = tk.Frame(self.root)
+        frame.pack(fill="both", expand=True, padx=10, pady=10)
+        columns = ("ID", "Nama", "Stok", "Harga")
+        self.tree = ttk.Treeview(frame, columns=columns, show="headings")
+        for c in columns:
+            self.tree.heading(c, text=c)
+            self.tree.column(c, width=150)
+        self.tree.pack(fill="both", expand=True)
+        self.tree.bind("<<TreeviewSelect>>", self.select_item)
+
+    def refresh(self):
+        self.tree.delete(*self.tree.get_children())
+        total_stok = 0
+        total_nilai = 0
+        for b in barang:
+            self.tree.insert("", "end", values=(b["id"], b["nama"], b["stok"], b["harga"]))
+            total_stok += b["stok"]
+            total_nilai += b["stok"] * b["harga"]
+        self.card_barang.config(text=f"Barang: {len(barang)}")
+        self.card_stok.config(text=f"Stok: {total_stok}")
+        self.card_nilai.config(text=f"Nilai: Rp {total_nilai}")
+        
+        if hasattr(self, "tree_pesanan"):
+            self.tree_pesanan.delete(*self.tree_pesanan.get_children())
+            nomor = 1
+            for pesanan in queue_pesanan:
+                self.tree_pesanan.insert("", "end", values=(nomor, pesanan["barang"], pesanan["jumlah"]))
+                nomor += 1
+                
+        if hasattr(self, "list_riwayat"):
+            self.list_riwayat.delete(0, tk.END)
+            for item in reversed(riwayat):
+                self.list_riwayat.insert(tk.END, f"[{item['waktu']}] {item['aktivitas']}")
+
