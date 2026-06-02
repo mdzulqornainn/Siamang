@@ -150,7 +150,7 @@ class Dashboard:
         self.refresh()
         self.root.mainloop()
 
-        def build_header(self):
+    def build_header(self):
         frame = tk.Frame(self.root, bg="#1f4e79", height=80)
         frame.pack(fill="x")
         tk.Label(frame, text="SISTEM MANAJEMEN GUDANG & PESANAN", bg="#1f4e79", fg="white", font=("Segoe UI", 16, "bold")).pack(side="left", padx=20)
@@ -293,7 +293,7 @@ class Dashboard:
             if item["id"] == item_id:
                 barang.remove(item)
                 break
-        save_json(BARANG FILE, barang)
+        save_json(BARANG_FILE, barang)
         tambah_riwayat(f"Hapus Barang: {nama_barang}")
         self.refresh()
 
@@ -303,3 +303,58 @@ class Dashboard:
         for item in barang:
             if keyword in item["nama"].lower():
                 self.tree.insert("", "end", values=(item["id"], item["nama"], item["stok"], item["harga"]))
+
+    def binary_search(self):
+        try:
+            target = int(self.cari.get())
+        except:
+            messagebox.showerror("Error", "Masukkan Id berupan angka")
+            return
+        data = sorted(barang, key=lambda x: x["id"])
+        kiri = 0
+        kanan = len(data) - 1
+        while kiri <= kanan:
+            tengah = (kiri + kanan) // 2
+            if data[tengah]["id"] == target:
+                hasil = data[tengah]
+                messagebox.showinfo("Barang ditemukan", f"Id:{hasil['id']}\nNama: {hasil['nama']}\nStok: {hasil['stok']}\nHarga: {hasil['harga']:,}")
+                return
+            elif data[tengah]["id"] < target:
+                kiri = tengah + 1
+            else:
+                kanan = tengah - 1
+        messagebox.showwarning("Tidak ditemukan", "Id barang tidak ditemukan")
+    
+    def sort_nama(self):
+        bubble_sort(barang, "nama")
+        tambah_riwayat("Urutkan Data Berdasarkan Nama")
+        self.refresh()
+    
+    def sort_stok(self):
+        bubble_sort(barang, "stok")
+        tambah_riwayat("Urutkan Data Berdasarkan Stok")
+        self.refresh()
+
+    def sort_harga(self):
+        bubble_sort(barang, "harga")
+        tambah_riwayat("Urutkan Data Berdasarkan Harga")
+        self.refresh()
+    
+    def export_csv(self):
+        lokasi = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV File", "*.csv")])
+        if not lokasi:
+            return
+        with open(lokasi, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Id", "Nama Barang", "Stok", "Harga"])
+            for item in barang:
+                writer.writerow([item["id"], item["nama"], item["stok"], item["harga"]])
+            tambah_riwayat("Ekspor Data CSV")
+            messagebox.showinfo("Berhasil", "Data berhasil di ekspor")
+    
+    def logout(self):
+        jawab = messagebox.askyesno("Logout", "Yakin ingin keluar?")
+        if jawab: 
+            tambah_riwayat(f"Logout: {self.username}")
+            self.root.destroy()
+            LoginWindow()
