@@ -358,3 +358,99 @@ class Dashboard:
             tambah_riwayat(f"Logout: {self.username}")
             self.root.destroy()
             LoginWindow()
+
+    def build_pesanan(self):
+        frame = tk.LabelFrame(self.root, text="Manajemen Pesanan")
+        frame.pack(fill="x", padx=10, pady=5)
+        tk.LabelFrame(frame, text="Nama Barang").grid(row=0,column=0,padx=5,pady=5)
+        self.pesanan_barang = ttk.Entry(frame, width=25)
+        self.pesanan_barang.grid(row=0, column=1)
+        tk.Label(frame, text="Jumlah").grid(row=0, coulmn=2)
+        self.pesanan_jumlah = ttk.Entry(frame, width=10)
+        self.pesanan_jumlah.grid(row=0, column=3)
+
+        ttk.Button(frame, text="Tambah Pesanan", command=self.tambah_pesanan).grid(row=0, column=4, padx=5)
+        ttk.Button(frame, text="Proses Pesanan", command=self.proses_pesanan).grid(row=0, column=5, padx=5)
+        ttk.Button(frame, text="Batalkan Proses", command=self.undo_pesanan).grid(row=0, column=6, padx=5)
+        ttk.Button(frame, text="Hapus Antrean", command=self.hapus_antrean_pesanan).grid(row=0, column=7, padx=5)
+
+        columns = ("No", "Barang", "Jumlah")
+        self.tree_pesanan = ttk.Treeview(frame, columns=columns, show="headings", height=5)
+        for col in columns:
+            self.tree_pesanan.heading(col, text=col)
+            self.tree_pesanan.column(col, width=150)
+        self.tree_pesanan.grid(row=1, column=0, columnspan=8, sticky="nsew", padx=5, pady=10)
+
+    def hapus_antrean_pesanan(self):
+        if not queue_pesanan:
+            messagebox.showwarning("Kosong", "Tidak ada pesanan di antrean")
+            return
+        pesanan_batal = queue_pesanan.pop()
+        tambah_riwayat(f"Hapus antrean : {pesanan_batal['barang']}")
+        self.refresh()
+
+    def tambah_pesanan(self):
+        nama = self.pesanan_barang.get().strip()
+        if not nama:
+            messagebox.showerror("Error", "Nama barang wajib diisi")
+            return
+        try:
+            jumlah = int(self.pesanan_jumlah.get())
+        except:
+            messagebox.showerror("Error", "Jumlah harus angka")
+            return
+        if jumlah <= 0:
+            messagebox.showerror("Error", "Jumlah minimal 1")
+            return
+        queue_pesanan.append({"barang": nama, "jumlah": jumlah})
+        tambah_riwayat(f"Tambah Pesanan : {nama} ({jumlah})")
+        self.pesanan_barang.delete(0, tk.END)
+        self.pesanan_jumlah.delete(0, tk.END)
+        self.refresh()
+
+    def proses_pesanan(self):
+        if not queue_pesanan:
+            messagebox.showwarning("Kosong", "Tidak ada pesanan")
+            return
+        pesanan = queue_pesanan.popleft()
+        nama = pesanan["barang"]
+        jumlah = pesanan["jumlah"]
+        ditemukan = False
+        for item in barang:
+            if item["nama"].lower() == nama.lower():
+                ditemukan = True
+                if item["stok"] >= jumlah:
+                    item["stok"] -= jumlah
+                    undo_stack.append({"barang": nama, "jumlah": jumlah})
+                    save_json(BARANG_FILE, barang)
+                    tambah_riwayat(f"Proses FIFO : {nama}")
+                    messagebox.showinfo("Berhasil", f"Pesanan {nama} diproses")
+                else:
+                    messagebox.showwarning("Stok Kurang", f"Stok tersedia {item['stok']}")
+                    queue_pesanan.appendleft(pesanan)
+                break
+        if not ditemukan:
+            messagebox.showwarning("Tidak Ditemukan", "Barang tidak ditemukan")
+            queue_pesanan.appendleft(pesanan)
+        self.refresh()
+
+    def undo_pesanan(self):
+        if not undo_stack:
+            messagebox.showwarning("Kosong", "Tidak ada data undo")
+            return
+        data = undo_stack.pop()
+        for item in barang:
+            if item in barang:
+                if item["nama"].lower() == data["barang"].lower():
+                    item["stok"] += data["jumlah"]
+                    save_json(BARANG_FILE, barang)
+                    tambah_riwayat(f"Undo Pesanan : {data['barang']}")
+                    break
+            queue_pesanan.appendleft(data)
+            self.refresh()
+
+    def build_riwayat(self):
+        frame = tk.LabelFrame(self.root, text="Riwayat Aktivitas")
+        frame.pack(fill="both", expand=True, padx=10, pady=5)
+        self.list_riwayat = tk.Listbox(frame, height=8)
+        self.list_riwayat.pack(fill="both", expand=True, padx=5, pady=5)
