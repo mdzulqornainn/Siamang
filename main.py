@@ -269,11 +269,12 @@ class Dashboard:
             messagebox.showerror("Error", "Stok dan Harga harus berupa angka")
             return
         item_id = self.tree.item(selected[0])["values"][0]
-        for item in barang["id"] == item_id:
-            item["nama"] = nama
-            item["stok"] = stok
-            item["harga"] = harga
-            break
+        for item in barang:
+            if item["id"] == item_id:
+                item["nama"] = nama
+                item["stok"] = stok
+                item["harga"] = harga
+                break
         save_json(BARANG_FILE, barang)
         tambah_riwayat(f"Perbarui Barang: {nama}")
         self.refresh()
@@ -365,7 +366,7 @@ class Dashboard:
         tk.LabelFrame(frame, text="Nama Barang").grid(row=0,column=0,padx=5,pady=5)
         self.pesanan_barang = ttk.Entry(frame, width=25)
         self.pesanan_barang.grid(row=0, column=1)
-        tk.Label(frame, text="Jumlah").grid(row=0, coulmn=2)
+        tk.Label(frame, text="Jumlah").grid(row=0, column=2)
         self.pesanan_jumlah = ttk.Entry(frame, width=10)
         self.pesanan_jumlah.grid(row=0, column=3)
 
@@ -454,3 +455,7 @@ class Dashboard:
         frame.pack(fill="both", expand=True, padx=10, pady=5)
         self.list_riwayat = tk.Listbox(frame, height=8)
         self.list_riwayat.pack(fill="both", expand=True, padx=5, pady=5)
+
+print("PROGRAM DIMULAI")
+if __name__ == "__main__":
+    LoginWindow()

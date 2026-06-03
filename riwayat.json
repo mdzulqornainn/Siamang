@@ -1,0 +1,42 @@
+[
+    {
+        "waktu": "03-06-2026 23:23:03",
+        "aktivitas": "Register: salsaw"
+    },
+    {
+        "waktu": "03-06-2026 23:23:30",
+        "aktivitas": "Login: salsaw"
+    },
+    {
+        "waktu": "03-06-2026 23:24:47",
+        "aktivitas": "Urutkan Data Berdasarkan Harga"
+    },
+    {
+        "waktu": "03-06-2026 23:25:26",
+        "aktivitas": "Tambah Pesanan : buku (3)"
+    },
+    {
+        "waktu": "03-06-2026 23:25:40",
+        "aktivitas": "Tambah Pesanan : penghapus (2)"
+    },
+    {
+        "waktu": "03-06-2026 23:25:42",
+        "aktivitas": "Proses FIFO : buku"
+    },
+    {
+        "waktu": "03-06-2026 23:25:47",
+        "aktivitas": "Proses FIFO : penghapus"
+    },
+    {
+        "waktu": "03-06-2026 23:25:54",
+        "aktivitas": "Undo Pesanan : penghapus"
+    },
+    {
+        "waktu": "03-06-2026 23:25:55",
+        "aktivitas": "Undo Pesanan : buku"
+    },
+    {
+        "waktu": "03-06-2026 23:26:07",
+        "aktivitas": "Logout: salsaw"
+    }
+]
