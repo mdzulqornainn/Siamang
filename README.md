@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Tkinter](https://img.shields.io/badge/Tkinter-GUI-blueviolet?style=for-the-badge)
 ![JSON](https://img.shields.io/badge/Database-JSON-lightgrey?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In%20Progress-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-green?style=for-the-badge)
 
 **SiAmang** adalah aplikasi desktop berbasis antarmuka grafis (GUI) yang dirancang untuk mempermudah pencatatan stok gudang dan memproses antrean pesanan secara sistematis. Aplikasi ini dibangun sepenuhnya menggunakan Python dengan pustaka bawaan Tkinter dan struktur penyimpanan data JSON.
 
